@@ -70,7 +70,7 @@ rm payload.json
 
 ### Retrieve Document Extraction ###
 
-sleep 20
+sleep 10
 DOCUMENT_ID=$(echo "$UPLOAD_RESPONSE" | jq -r '.id')
 echo "Getting Document Extraction..."
 DOCUMENT_EXTRACTION=$(curl -s -X GET "$BASE_URL/documents/$DOCUMENT_ID/extraction" \
