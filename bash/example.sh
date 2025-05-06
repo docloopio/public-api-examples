@@ -72,8 +72,7 @@ rm payload.json
 
 sleep 20
 DOCUMENT_ID=$(echo "$UPLOAD_RESPONSE" | jq -r '.id')
-# DOCUMENT_ID="680ab8e7c7a56ef72df09ff9"
 echo "Getting Document Extraction..."
 DOCUMENT_EXTRACTION=$(curl -s -X GET "$BASE_URL/documents/$DOCUMENT_ID/extraction" \
   -H "Authorization: Bearer $ACCESS_TOKEN")
-echo $DOCUMENT_EXTRACTION
+echo $DOCUMENT_EXTRACTION | jq
