@@ -39,13 +39,18 @@ echo $USECASES_RESPONSE | jq '.'
 ### Upload Document ###
 
 # Select Usecase ID and Document Type for document upload
-USECASE_ID="6703ecaa78f03d3eceef642e"
-DOCUMENT_TYPE="ROAD_TRANSPORT_ORDER"
+USECASE_ID="67cb205097e0f55bc5849100"
+DOCUMENT_TYPE="COMMERCIAL_INVOICE"
+FILENAME="example_invoice.pdf"
+
+# USECASE_ID="6703ecaa78f03d3eceef642e"
+# DOCUMENT_TYPE="ROAD_TRANSPORT_ORDER"
+# FILENAME="example_transport_order.pdf"
 
 # Converte invoice PDF Document binary to base64
-echo "Generate base64 invoice pdf file..."
+echo "Generate base64 document file..."
 PDF_DOCUMENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BASE_64_PDF_DOCUMENT=$(base64 -w 0 $PDF_DOCUMENT_DIR/../resources/example_transport_order.pdf)
+BASE_64_PDF_DOCUMENT=$(base64 -w 0 $PDF_DOCUMENT_DIR/../resources/$FILENAME)
 
 # Create payload file for large argument (base64 file data)
 echo "Create request upload document payload"
@@ -53,7 +58,7 @@ cat <<EOF > payload.json
 {
   "usecaseId": "$USECASE_ID",
   "documentType": "$DOCUMENT_TYPE",
-  "filename": "example_transport_order.pdf",
+  "filename": "$FILENAME",
   "fileData": "$BASE_64_PDF_DOCUMENT"
 }
 EOF
