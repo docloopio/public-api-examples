@@ -55,4 +55,4 @@ EXTRACTION_RESPONSE=$(curl -s -X POST "$BASE_URL_API/extractions" \
 EOF
 )
 
-echo "$EXTRACTION_RESPONSE"
+echo "$EXTRACTION_RESPONSE" | jq '.'
