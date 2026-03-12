@@ -32,7 +32,11 @@ if [ "$1" == "handle_request" ]; then
     BODY=$(dd bs=1 count="$CONTENT_LENGTH" 2>/dev/null)
     echo "" >&2
     echo "--- Body ---" >&2
-    echo "$BODY" >&2
+    if command -v jq >/dev/null 2>&1 && echo "$BODY" | jq -e . >/dev/null 2>&1; then
+      echo "$BODY" | jq . >&2
+    else
+      echo "$BODY" >&2
+    fi
   fi
 
   echo "================" >&2
@@ -62,6 +66,10 @@ if ! command -v socat &> /dev/null; then
   echo "  - CentOS/RHEL:   sudo yum install socat" >&2
   echo "  - macOS:         brew install socat" >&2
   exit 1
+fi
+
+if ! command -v jq &> /dev/null; then
+  echo "⚠️ Warning: 'jq' is not installed. JSON bodies will not be pretty-printed." >&2
 fi
 
 PORT=${1:-5555}
