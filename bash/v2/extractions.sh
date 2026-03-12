@@ -39,6 +39,16 @@ if [ -z "$API_KEY" ] || [ -z "$BASE_URL_API" ] || [ -z "$WEBHOOK_URL" ]; then
     exit 1
 fi
 
+if [[ ! "$BASE_URL_API" =~ ^https?:// ]]; then
+    echo "Error: BASE_URL_API must be a valid URL starting with http:// or https://"
+    exit 1
+fi
+
+if [[ ! "$WEBHOOK_URL" =~ ^https?:// ]]; then
+    echo "Error: WEBHOOK_URL must be a valid URL starting with http:// or https://"
+    exit 1
+fi
+
 echo "Create extraction for $FILENAME..."
 
 EXTRACTION_RESPONSE=$(curl -s -X POST "$BASE_URL_API/extractions" \
@@ -55,4 +65,5 @@ EXTRACTION_RESPONSE=$(curl -s -X POST "$BASE_URL_API/extractions" \
 EOF
 )
 
-echo "$EXTRACTION_RESPONSE" | jq '.'
+# echo "$EXTRACTION_RESPONSE" | jq '.'
+echo "$EXTRACTION_RESPONSE"
