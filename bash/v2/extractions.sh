@@ -31,7 +31,7 @@ if [ ! -f "$FILE_PATH" ]; then
 fi
 
 FILENAME=$(basename "$FILE_PATH")
-FILE_DATA=$(base64 -w 0 "$FILE_PATH")
+FILE_DATA=$(base64 < "$FILE_PATH" | tr -d '[:space:]')
 
 # Environment variables validation
 if [ -z "$API_KEY" ] || [ -z "$BASE_URL_API" ] || [ -z "$WEBHOOK_URL" ]; then
