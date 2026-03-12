@@ -58,6 +58,15 @@ fi
 # 2. MAIN SERVER STARTUP
 # ==========================================
 
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load .env file if it exists
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  # shellcheck source=/dev/null
+  source "$SCRIPT_DIR/.env"
+fi
+
 # Check if socat is installed before proceeding
 if ! command -v socat &> /dev/null; then
   echo "⚠️ Error: 'socat' is not installed on this system." >&2
@@ -72,7 +81,7 @@ if ! command -v jq &> /dev/null; then
   echo "⚠️ Warning: 'jq' is not installed. JSON bodies will not be pretty-printed." >&2
 fi
 
-PORT=${1:-5555}
+PORT=${1:-${PORT:-5555}}
 
 echo "Starting HTTP server on port $PORT using socat..."
 echo "Press Ctrl+C to stop."
