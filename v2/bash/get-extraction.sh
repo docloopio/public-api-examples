@@ -16,11 +16,11 @@ fi
 
 # Parameters validation
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <documentId>"
+    echo "Usage: $0 <jobId>"
     exit 1
 fi
 
-DOCUMENT_ID=$1
+JOB_ID=$1
 
 # Environment variables validation
 if [ -z "$API_KEY" ] || [ -z "$BASE_URL_API" ]; then
@@ -33,7 +33,7 @@ if [[ ! "$BASE_URL_API" =~ ^https?:// ]]; then
     exit 1
 fi
 
-echo "Retrieving extraction for document $DOCUMENT_ID..."
+echo "Retrieving extraction for job $JOB_ID..."
 echo ""
 echo "--- Request Headers ---"
 echo "Authorization: Bearer ${API_KEY:0:10}..."
