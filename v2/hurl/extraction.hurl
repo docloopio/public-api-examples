@@ -17,7 +17,7 @@ document_id: jsonpath "$.documentId"
 job_id: jsonpath "$.jobId"
 
 # Get Extraction (with retry loop)
-GET {{BASE_URL_API}}/extractions/{{document_id}}
+GET {{BASE_URL_API}}/extractions/{{job_id}}
 Authorization: Bearer {{API_KEY}}
 Content-Type: application/json
 [Options]
