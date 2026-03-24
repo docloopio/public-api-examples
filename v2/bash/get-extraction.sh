@@ -47,7 +47,7 @@ BODY_FILE=$(mktemp)
 
 # Execute request and capture HTTP code
 set +e
-HTTP_CODE=$(curl -S -s -o "$BODY_FILE" -D "$HEADERS_FILE" -w "%{http_code}" -X GET "$BASE_URL_API/extractions/$DOCUMENT_ID" \
+HTTP_CODE=$(curl -S -s -o "$BODY_FILE" -D "$HEADERS_FILE" -w "%{http_code}" -X GET "$BASE_URL_API/extractions/$JOB_ID" \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" 2>curl_error.log
 )
