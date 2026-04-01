@@ -1,4 +1,7 @@
-# Docloop Public API v1 Bash Examples
+# Docloop Public API v1 Bash Examples (Deprecated)
+
+> [!WARNING]
+> This API version is deprecated and will be decommissioned soon. Please use [API v2](../../v2/bash/README.md) for all new implementations.
 
 This directory contains Bash script examples for interacting with the Docloop Public API v1.
 

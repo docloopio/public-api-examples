@@ -43,7 +43,10 @@ Generally, you will:
 2. Fill in your `API_KEY` and other configuration.
 3. Run the scripts according to the documentation.
 
-### API v1
+### API v1 (Deprecated)
+
+> [!WARNING]
+> API v1 is deprecated and will be decommissioned soon. We strongly recommend migrating to API v2.
 
 API v1 requires an explicit authentication step to exchange an API Key for an access token.
 
