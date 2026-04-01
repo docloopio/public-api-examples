@@ -74,4 +74,5 @@ Start a local HTTP server to receive and log extraction results sent by webhooks
 
 - `port`: (Optional) Port to listen on (default: `5555`).
 
-This requires `socat` to be installed. It will log incoming POST requests, including headers and JSON bodies, to your terminal.
+This requires `socat` to be installed. It will log incoming POST requests, including headers and JSON bodies, to your terminal, and verify the `X-Docloop-Signature` header using `openssl`.
+erminal.
