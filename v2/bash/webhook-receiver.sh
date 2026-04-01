@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load .env file if it exists
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  # shellcheck source=/dev/null
+  source "$SCRIPT_DIR/.env"
+fi
+
 # ==========================================
 # 1. HANDLER LOGIC (Runs when called by socat)
 # ==========================================
@@ -18,12 +27,16 @@ if [ "$1" == "handle_request" ]; then
 
   # Read headers
   CONTENT_LENGTH=0
+  SIGNATURE=""
   while IFS= read -r HEADER; do
     HEADER=$(echo "$HEADER" | tr -d '\r')
     [ -z "$HEADER" ] && break
     echo "$HEADER" >&2
     if echo "$HEADER" | grep -iq "^Content-Length:"; then
       CONTENT_LENGTH=$(echo "$HEADER" | awk -F': ' '{print $2}' | tr -d '[:space:]')
+    fi
+    if echo "$HEADER" | grep -iq "^x-docloop-signature:"; then
+      SIGNATURE=$(echo "$HEADER" | awk -F': ' '{print $2}' | tr -d '[:space:]')
     fi
   done
 
@@ -32,6 +45,23 @@ if [ "$1" == "handle_request" ]; then
     BODY=$(dd bs=1 count="$CONTENT_LENGTH" 2>/dev/null)
     echo "" >&2
     echo "--- Body ---" >&2
+    
+    # Signature Verification
+    if [ -n "$WEBHOOK_SECRET" ]; then
+      # Strip sha256= prefix if present
+      CLEAN_SIGNATURE="${SIGNATURE#sha256=}"
+      COMPUTED_SIGNATURE=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
+      if [ "$CLEAN_SIGNATURE" == "$COMPUTED_SIGNATURE" ]; then
+        echo "✅ Signature verified!" >&2
+      else
+        echo "❌ Invalid signature!" >&2
+        echo "   Received: $SIGNATURE" >&2
+        echo "   Computed: $COMPUTED_SIGNATURE" >&2
+      fi
+    else
+      echo "⚠️ WEBHOOK_SECRET not set, skipping signature verification." >&2
+    fi
+
     if command -v jq >/dev/null 2>&1 && echo "$BODY" | jq -e . >/dev/null 2>&1; then
       echo "$BODY" | jq . >&2
     else
@@ -58,15 +88,6 @@ fi
 # 2. MAIN SERVER STARTUP
 # ==========================================
 
-# Get script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Load .env file if it exists
-if [ -f "$SCRIPT_DIR/.env" ]; then
-  # shellcheck source=/dev/null
-  source "$SCRIPT_DIR/.env"
-fi
-
 # Check if socat is installed before proceeding
 if ! command -v socat &> /dev/null; then
   echo "⚠️ Error: 'socat' is not installed on this system." >&2
@@ -81,7 +102,7 @@ if ! command -v jq &> /dev/null; then
   echo "⚠️ Warning: 'jq' is not installed. JSON bodies will not be pretty-printed." >&2
 fi
 
-PORT=${1:-${PORT:-5555}}
+PORT=${1:-${WEBHOOK_PORT:-5555}}
 
 echo "Starting HTTP server on port $PORT using socat..."
 echo "Press Ctrl+C to stop."
