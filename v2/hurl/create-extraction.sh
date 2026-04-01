@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Load environment variables from .env if it exists
-if [ -f .env ]; then
-  source .env
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  source "$SCRIPT_DIR/.env"
 else
   echo ".env file not found, please copy .env-dist to .env and configure it."
   exit 1
@@ -24,14 +27,10 @@ if [ ! -f "$FILE_PATH" ]; then
   exit 1
 fi
 
-# Extract filename from filepath
 FILENAME=$(basename "$FILE_PATH")
 
-# Create a temporary variables file for Hurl to avoid "Argument list too long"
+# Create a temporary variables file for Hurl
 VARS_FILE=$(mktemp)
-
-# Write variables to the temporary file
-# We use printf to avoid issues with large strings in some shell built-ins
 printf "usecase_id=%s\n" "$USECASE_ID" > "$VARS_FILE"
 printf "document_type=%s\n" "$DOCUMENT_TYPE" >> "$VARS_FILE"
 printf "filename=%s\n" "$FILENAME" >> "$VARS_FILE"
@@ -39,13 +38,9 @@ printf "file_data=" >> "$VARS_FILE"
 base64 -w 0 "$FILE_PATH" >> "$VARS_FILE"
 printf "\n" >> "$VARS_FILE"
 
-# Run the hurl test using both the .env and the temporary variables file
-hurl --very-verbose --variables-file .env --variables-file "$VARS_FILE" extraction.hurl
+# Run the hurl test
+hurl --variables-file "$SCRIPT_DIR/.env" --variables-file "$VARS_FILE" "$SCRIPT_DIR/create_extraction.hurl"
 
-# Capture exit code
 EXIT_CODE=$?
-
-# Cleanup
 rm "$VARS_FILE"
-
 exit $EXIT_CODE
