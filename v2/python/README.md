@@ -47,6 +47,24 @@ python get_extraction.py <jobId>
 
 - `jobId`: The ID returned by the `create_extraction.py` script.
 
+### List Use Cases
+
+Retrieve all use cases available for your account, including their document types.
+
+```bash
+python get_usecases.py
+```
+
+### Get a Use Case
+
+Retrieve a specific use case by its ID.
+
+```bash
+python get_usecase.py <usecaseId>
+```
+
+- `usecaseId`: The ID of the use case.
+
 ### Receive Webhook & Verify Signature
 
 This example starts a simple HTTP server that receives POST requests from Docloop and verifies the `x-docloop-signature` header using your `WEBHOOK_SECRET`. It listens on port `5555` by default (configurable via `WEBHOOK_PORT` in `.env`).

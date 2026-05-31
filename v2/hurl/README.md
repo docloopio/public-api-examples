@@ -52,3 +52,21 @@ Example:
 ```bash
 ./get-extraction.sh 12345-67890
 ```
+
+### List Use Cases
+
+Retrieve all use cases available for your account.
+
+```bash
+hurl --variables-file .env get_usecases.hurl
+```
+
+### Get a Use Case
+
+Retrieve a specific use case by its ID.
+
+```bash
+hurl --variables-file .env --variable usecase_id=<usecaseId> get_usecase.hurl
+```
+
+- `usecase_id`: The ID of the use case.

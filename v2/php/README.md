@@ -44,6 +44,24 @@ php get_extraction.php <jobId>
 
 - `jobId`: The ID returned by the `create_extraction.php` script.
 
+### List Use Cases
+
+Retrieve all use cases available for your account, including their document types.
+
+```bash
+php get_usecases.php
+```
+
+### Get a Use Case
+
+Retrieve a specific use case by its ID.
+
+```bash
+php get_usecase.php <usecaseId>
+```
+
+- `usecaseId`: The ID of the use case.
+
 ### Webhook Receiver
 
 Start a local HTTP server to receive and log extraction results sent by webhooks.
